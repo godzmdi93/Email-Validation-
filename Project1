@@ -1,0 +1,102 @@
+#include <iostream> // header file for c++ and it gives me service of input and output
+#include <string> //This is a string library that lets me use string in the program and any string related functions*/
+using namespace std;
+
+class Email {               // here you are declaring or defining a class called email
+public:
+ void inputEmail(); //prompts user to enter a string (email).
+ void caseInput();  //convert capital letters to small-case letters.
+ void parseInput(); // divide the string into substrings (token).
+ void validate(); // verify if the user-entered string is correct form of an email address.
+private:
+ string email; //user-entered string
+ string username;
+ string domain;
+};
+
+/* this is end of declaring class and i put my functions in public so i can use it in main function and
+switch it around because things that are in private can not be changed outside the class declaring part.*/
+
+void Email::inputEmail() {
+ cout << "Enter an Email Address: ";
+ getline(cin, email);
+}
+
+void Email::caseInput() {
+ for (int i = 0; i < email.length(); i++) {
+  if ((email.at(i) <= 'Z') && (email.at(i) >= 'A')) {
+   email.at(i) += 32;
+  }
+ }
+}
+
+void Email::parseInput() {
+ for (int i = 0; i < email.length(); i++) {
+  if (email.at(i) == '@') {
+   //everything before '@' goes into string username.
+   username = email.substr(0, i);
+   //everything after '@' goes into string domain
+   domain = email.substr(i + 1);
+  }
+ }
+}
+
+void Email::validate() {
+ bool isAtPresent = true;  // is '@' in the user-entered string?
+ bool isUserValid = true; //is username in valid form?
+ bool isDomainValid = true;   // is domain in valid form?
+ int at = 0; //works as a counter to find the number of '@'
+ int period = 0; // works as a counter to find the number of '.' period
+
+ for (int i = 0; i < email.length(); i++) {       //reason for doing this is to count number of '@' when '@' shows up for the first time, at= at+1 so at becomes 2
+  if (email.at(i) == '@') {                       // and then if it detects second '@', then again it goes at= at + 1, since there was already one '@', we can 
+   at++;
+  }
+  // know that at = 1+1 = 2. If there's more '@' showing up, this counting process continues.
+ }
+
+ if ((at == 0)) {
+  isAtPresent = false; // means that there is no '@' in the user-entered string.
+ }
+
+ //now we are validating username
+
+ for (int i = 0; i < username.length(); i++) {
+  if ((username.at(i) == ' ') || (username.at(i) == '@')) {
+   isUserValid = false;
+  }
+ }
+
+
+ // now validate domain
+ for (int i = 0; i < domain.length(); i++) {
+  if ((domain.at(i) < 'a') && (domain.at(i) > 'z') && (domain.at(i) != '.')) {
+   isDomainValid = false; // if there is any chracters other than a-z or '.', domain is not valid.
+  }
+  if (domain.at(i) == '.') {
+   period++;
+  }
+ }
+
+ if (period == 0) {
+  isDomainValid = false; // if there is no '.' at all, then the domain is not valid
+ }
+ if ((isUserValid == false) || (isDomainValid == false) || (isAtPresent == false)) {
+  cout << "*****I N V A L I D*****" << endl;
+ }
+ else {
+  cout << "******VALID*******" << endl;
+ }
+}
+
+int main() { //main function
+ Email E;
+
+ E.inputEmail();
+ E.caseInput();
+ E.parseInput();
+ E.validate();
+
+ cin.get(); 
+ return 0;
+}
